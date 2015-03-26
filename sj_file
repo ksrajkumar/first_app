@@ -1,0 +1,336 @@
+openerp.custom_productivity_metrics_report = function(openerp) {
+    var QWeb = openerp.web.qweb;
+    var _t = openerp.web._t;  
+    var act_details;
+    
+    
+    openerp.web.form.custom_widgets.add('TreeViewData', 'openerp.custom_productivity_metrics_report.treeview');
+    openerp.custom_productivity_metrics_report.treeview = openerp.web.Widget.extend(openerp.web.form.ReinitializeWidgetMixin,
+        {
+        template:"custom_productivity_metrics_report.treeviewdata.template",
+        start : function() {
+            this._super();
+            
+        },
+        events: {
+            "click .call_req_received a": "go_to_req_received", 
+            "click .call_open_position a": "go_call_open_position",
+            
+            "click .call_to_bu a": "go_call_to_bu",     
+            "click .call_to_client a": "go_call_to_client", 
+            "click .call_interview a": "go_call_interview",
+            "click .call_offer a": "go_call_offer",     
+            "click .call_join_starts a": "go_call_join_starts",   
+            
+            "click .call_decliened a": "go_call_decliened",
+            "click .call_withdrawn a": "go_call_withdrawn",
+            "click .call_to_join a": "go_call_to_join",
+
+
+        },
+        init: function (view, code) {
+            this._super(view, code);
+            var data = {};
+            this.report_details;
+            this.analysis_details = {};
+            var detail;
+            this._super.apply(this, arguments);
+            this.analysis_details = this.get_activity_analysis_details();
+            console.log('counting...');
+	    
+	    
+	    //~ new openerp.web.Model("activity.analysis").call("fetch_data", [[],]).then(function(res) {                
+				//~ alert();
+				//~ detail = JSON.parse(res);
+				//~ analysis_details=detail
+				//~ analysis_details.set_value(detail);
+//~ 
+				//~ });
+	    
+	    
+        },
+        destroy: function() {
+            return this._super();
+        },
+        
+	
+	initialize_field: function() {
+            openerp.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
+            var self = this;
+            
+            this.analysis_details = this.get_activity_analysis_details();
+            new openerp.web.Model("activity.analysis").call("fetch_data", [[],]).then(function(res) {          
+		alert();      
+                                            
+                                            detail = JSON.parse(res);
+                                            analysis_details=detail
+					    this.analysis_details.set_value(detail);
+
+					    });
+        },
+	
+        
+        
+        go_to_req_received: function(event) {
+            //~ var id = JSON.parse($(event.target).data("id"));
+            var id = $(event.currentTarget).data("id");
+            var count=$(event.currentTarget).data("count");
+            var job_v_id=$(event.currentTarget).data("job-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+
+            if (count > 0) {
+            
+            //~ alert(v_id+"Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[job_v_id, 'tree']],
+                view_id : job_v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',1]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "Request Received - "+clt_id
+		
+            });
+        }
+        },
+        
+        
+        go_call_open_position: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+            var count=$(event.currentTarget).data("count");
+            var job_v_id=$(event.currentTarget).data("job-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert(v_id+"Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[job_v_id, 'tree']],
+                view_id : job_v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',2]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "Open Positions - "+clt_id
+            });
+        }
+        },
+        
+        
+        go_call_to_bu: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+            var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert(v_id+"Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[cand_v_id, 'tree']],
+                view_id : cand_v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',3]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "To Bu - "+clt_id
+            });
+        }
+        },
+        
+        
+        go_call_to_client: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',4]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "To Client - "+clt_id
+            });
+        }
+        },
+        
+        
+        go_call_interview: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',5]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "Interview - "+clt_id
+            });
+        }
+        },
+        
+        
+        go_call_offer: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',6]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "Offers - "+clt_id
+            });
+        }
+        },
+        
+        
+        go_call_join_starts: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',7]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "Join Starts - "+clt_id
+            });
+        }
+        },
+        
+        
+        go_call_decliened: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',8]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "Decliened - "+clt_id
+            });
+        }
+        },
+	
+	
+	go_call_withdrawn: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',9]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name: "withdrawn - "+clt_id
+            });
+        }
+        },
+	
+	go_call_to_join: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+             var count=$(event.currentTarget).data("count");
+            var cand_v_id=$(event.currentTarget).data("cand-vid");
+	    var clt_id=$(event.currentTarget).data("client-id");
+            if (count > 0) {
+            
+            //~ alert("Click to see the details T_ID  "+id);
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "complete.activity.analysis.data",
+                res_id: id,
+                views: [[false, 'tree']],
+                //~ view_id : v_id,
+                domain:[['count_rel_id','=',id],['stage_id','=',10]],
+                //~ context:{'invisible_job':1},
+                target: 'new',
+		name:"To Join - "+clt_id
+            });
+        }
+        },
+	
+	
+	
+	
+        get_activity_analysis_details: function(){
+              analysis_details=[];
+	      var act_details = {};
+            new openerp.web.Model("activity.analysis").call("fetch_data", [[],]).then(function(res) {                
+                                            
+                                            detail = JSON.parse(res);
+                                            analysis_details=detail
+					    act_details = detail
+
+            });
+                                        
+					//~ window.realAlert = window.alert;
+					//~ window.alert = function() {};
+					
+					//~ window.onload = function() {};
+			        var w = window.open('','MsgWindow','width=100,height=100');
+					w.document.write('Loading.....');
+					w.focus();
+					setTimeout(function() {w.close();}, 500);
+					//alert("Click to see the details");
+                                       console.log(analysis_details);
+                                
+                                    return act_details;
+    
+                            },
+       
+    });
+    
+};
