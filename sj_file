@@ -1,3 +1,5 @@
+#################3 static/src/js/ ########################################
+
 openerp.custom_productivity_metrics_report = function(openerp) {
     var QWeb = openerp.web.qweb;
     var _t = openerp.web._t;  
@@ -334,3 +336,143 @@ openerp.custom_productivity_metrics_report = function(openerp) {
     });
     
 };
+
+#######################################################  static/src/XML/.xml #################################################3
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+
+
+       
+   
+    <t t-name="custom_productivity_metrics_report.treeviewdata.template">
+        <link rel="stylesheet" type="text/css" href="/custom_productivity_metrics_report/static/src/css/jquery.dataTables.css"/>
+<script type="text/javascript" language="javascript" src="/custom_productivity_metrics_report/static/src/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="/custom_productivity_metrics_report/static/src/js/jquery.dataTables.js"></script>
+        <script>
+                   
+               var jq = jQuery.noConflict();
+               jq(document).ready(function() {
+jq('#analyse_data').dataTable();
+
+} );
+    </script>
+
+        <div class="workspace" style="padding:3px;">
+            <div class="panel panel-primary" >
+                <div class="panel-heading">
+                    <h3 class="panel-title">Consolidated Submission Activities</h3>
+                </div>
+                <div class="panel-body">
+       
+                <table  cellpadding="0" cellspacing="0" border="0" class="display" id="analyse_data" >
+                    <thead> 
+                        <tr>
+                            <th>Client</th>
+                            <th>Reqs Received</th>
+                            <th>Positions</th>
+                            <th>To BU</th>
+                            <th>To Client</th>
+                            <th>Interviews</th>
+                            <th>Offers </th>
+                            <th>Starts</th>
+                            <th>Declined</th>
+                            <th>Withdrawn</th>
+                            <th>To Join</th>
+                            <th>BU Head</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <t t-foreach="widget.analysis_details" t-as="todo">
+                    <tr>
+                        <td> <t t-esc="todo.client_id"/> </td>
+               
+                        <td class="call_req_received" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.req_received" t-att-data-job-vid="todo.view_job_ref" t-att-data-client-id="todo.client_id" >
+                                <t t-esc="todo.req_received"/>
+                            </a>
+                        </td>
+                       
+                        <td class="call_open_position" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.open_position" t-att-data-job-vid="todo.view_job_ref" t-att-data-client-id="todo.client_id" >
+                                <t t-esc="todo.open_position" />
+                            </a>
+                        </td>
+                       
+                        <td class="call_to_bu" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.to_bu"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+                                <t t-esc="todo.to_bu"/>
+                            </a>
+                        </td>
+                       
+                        <td class="call_to_client" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.to_client"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.to_client"/>
+			    </a>
+                           </td>
+               
+                        <td class="call_interview" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.interview"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.interview"/> 
+			    </a>
+                             </td>
+                        <td class="call_offer" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.offer"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.offer"/> 
+			    </a>
+                             </td>
+                        <td class="call_join_starts" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.join_starts"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.join_starts"/> 
+			    </a>
+                            </td>
+               
+                        <td class="call_decliened" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.decliened"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.decliened"/> 
+			    </a>
+                             </td>
+                        <td class="call_withdrawn" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.withdrawn"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.withdrawn"/> 
+			    </a>
+                             </td>
+                        <td class="call_to_join" style="text-align:right">
+                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(todo.t_id)" t-att-data-count="todo.to_join"  t-att-data-cand-vid="todo.view_cand_ref" t-att-data-client-id="todo.client_id" >
+				<t t-esc="todo.to_join"/> 
+			    </a>
+                            </td>
+                        <td> <t t-esc="todo.bu_id"/> </td>
+
+                    </tr>
+                </t>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
+
+
+###################################  view.xml ###########
+<record id="activity_analysis_line_form_view" model="ir.ui.view">
+        <field name="name">Activity Analysis Line</field>
+        <field name="model">activity.analysis.line</field>
+        <field name="arch" type="xml">
+            <form string="Activity Analysis Line" version="7.0" create="false" delete="false" >
+                    
+                <group col="4" colspan="2">
+                    <widget type="TreeViewData" >
+                            </widget>
+                    <field name="date_from" invisible="1"/>
+		    <field name="date_to" invisible="1"/>
+		    <field name="bu_head" invisible="1"/>
+		    <field name="client_id" invisible="1"/>
+                </group>
+                    
+            </form>
+        </field>
+    </record>
