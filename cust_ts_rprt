@@ -1,0 +1,2105 @@
+########################## custom_timesheet_report ##################################
+#################################### controller ########################################
+#################################### init.py ###########################################
+
+import timesheet_report_controllers
+import cStringIO
+
+export_timesheet_data=cStringIO.StringIO()
+export_timesheet_filename="timesheet.xls"
+
+################################# timesheet_report_controllers.py ##########################
+
+
+import openerp
+from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
+import openerp.addons.web.http as http
+import logging
+from openerp.addons.web.controllers.main import content_disposition
+from openerp import pooler
+import base64
+
+class timesheet_report(http.Controller):
+   _cp_path = '/custom_timesheet_report'
+
+   @http.httprequest
+   def export_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('timesheet.attendence.report')       
+ 
+        filename='test.xls'
+
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name+'.xls'
+            print "------------>filename",type(obj.name)
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+
+# Project deviation Report starts
+   @http.httprequest
+   def export_summary_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('timesheet.summary')
+        
+        filename='timesheet_summary.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name+'.xls'
+            print "------------>filename",type(filename)
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+#  Project deviation Report ends
+
+
+# Timecard Utilization Report starts
+   @http.httprequest
+   def export_timecard_utilization_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('timecard.utilization')
+        
+        filename='timecard_utilization.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name+'.xls'
+            #print "------------>filename",type(filename)
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+#  Timecard Utilization Report ends
+
+
+# Project Payment Tracking starts
+
+   @http.httprequest
+   def export_project_payment_tracking_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.payment.report')
+        filename='project_payment_track.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+    
+   @http.httprequest
+   def timeshhet_leave_report_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('hr.timesheet.leave.report')       
+ 
+        filename='timesheet_leave_report.xls'
+
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name+'.xls'
+            print "------------>filename",type(obj.name)
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()  
+# Project Payment Tracking ends
+
+# Project margin Report starts
+   @http.httprequest
+   def print_project_margin_report_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.margin.report')
+        
+        filename='Project_margin.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+#  Project margin Report ends
+
+# Project Sales Revenue Report starts
+
+   @http.httprequest
+   def export_project_sales_revenue_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.sales.revenue.report')
+        filename='project_sales_revenue_report.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+    
+   @http.httprequest
+   def export_project_revenue_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info('export_project_revenue_xls')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.revenue.report')     
+     
+        filename='Project_Revenue.xls'
+       
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            logging.info('================>%s'%obj.name)
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+    
+   @http.httprequest
+   def export_project_list_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info('export_project_revenue_xls')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.list.report')     
+     
+        filename='Project_List.xls'
+       
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            logging.info('================>%s'%obj.name)
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+    
+    
+# Project Sales Revenue Report ends
+
+# Project summary Report starts
+   @http.httprequest
+   def print_project_summary_report_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.summary.report')
+        
+        filename='Project_summary.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+#  Project summary Report ends
+
+#project status report
+   @http.httprequest
+   def project_status_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.status.report')
+        
+        filename='Project_Status.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+   #T&M project status report
+   @http.httprequest
+   def project_status_tm_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.status.tm.report')
+        
+        filename='Project_T&MStatus.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+   @http.httprequest   
+   def project_billing_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.billing.report')
+        
+        filename='Project_Billing.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+   @http.httprequest   
+   def export_project_po_tracker_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.po.tracker.report')
+        
+        filename='Project_PO_Tracker.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+
+   @http.httprequest
+   def export_project_detail_list_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.detail.list.report')
+        
+        filename='Project_Details.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+    
+           
+# Project holidat template
+   @http.httprequest
+   def import_project_template_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside import xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('customer.holidays')
+        
+        filename='Customer_import.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+        
+   @http.httprequest
+   def export_project_template_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('customer.holidays')
+        
+        filename='Customer_export.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+
+   @http.httprequest
+   def export_project_yealy_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.yearly.report')
+        
+        filename='Project_Yearly_Consolidated_Effort.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()        
+    
+   @http.httprequest
+   def export_over_time_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.over.time.report')
+        
+        filename='Project_over_time.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+   @http.httprequest
+   def project_billable_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.billable.report')
+        
+        filename='project_billable_hours.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+    
+   @http.httprequest
+   def export_billing_difference_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.billing.difference.report')
+        
+        filename='Project_billing_difference.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+
+   @http.httprequest
+   def project_tm_accrual_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.tm.accrual.report')
+        
+        filename='Project_T&M_Accrual.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()	 
+   @http.httprequest
+   def export_revenue_projection_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.revenue.projection.report')
+        
+        filename='Project_revenue_projection.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+   @http.httprequest
+   def project_accrual_worksheet_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.accrual.worksheet.report')
+        
+        filename='Project_accrual_worksheet.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+   @http.httprequest
+   def project_outstanding_statment_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.outstanding.statment.report')
+        
+        filename='Project_outstanding_statment.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+
+   @http.httprequest
+   def project_accrual_revenue_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.accrual.revenue.report')
+        
+        filename='Project_Accrual_Revenue.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+   @http.httprequest
+   def project_revenue_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.month.revenue.report')
+        
+        filename='Project_revenue.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+   @http.httprequest
+   def project_accrued_income_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.accrued.income.report')
+        
+        filename='Project_accrued_income.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+    
+   @http.httprequest   
+   def project_billing_pivot_report_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.billing.pivot.report')
+        
+        filename='Project_Billing.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found()
+
+
+   @http.httprequest
+   def profitability_statement_report_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.profitability.statement.report')
+        
+        filename='profitability_statement.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+   @http.httprequest
+   def export_project_bu_mapping_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('project.bu.mapping.report')
+        
+        filename='project_bu_mapping_rpt.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+    
+   @http.httprequest
+   def export_ars_timesheet_xls(self, req, id, db, uid, s_action=None, **kw):
+        logging.info(' Inside export xls method')
+        logging.info(id)
+        path = req.httprequest.path[1:].split('/')
+        cr = pooler.get_db(db).cursor()
+        pool = pooler.get_pool(db)
+        model = pool.get('ars.timesheet.attendence.report')
+        
+        filename='attendence_report.xls'
+        obj=model.browse(cr, uid,  int(id))
+        if obj:
+            filecontent = base64.b64decode(obj.data)
+            filename = obj.name
+            if filecontent and filename:
+                return req.make_response(filecontent,
+                    headers=[('Content-Type', 'application/octet-stream'),
+                            ('Content-Disposition', content_disposition(filename, req))])
+        return req.not_found() 
+
+########################################## report #########################################3
+##################################### init.py ############################################
+
+
+import excel_styles
+import xls
+
+############################################ excel_styles.py #########################################
+
+import os
+from xlwt import easyxf
+import xlwt
+
+
+tittle_style = xlwt.easyxf('font: height 240, name Arial, colour_index white, bold on; align: wrap on, vert centre, horiz center;' 'pattern: pattern solid, fore_colour 0x3C')
+
+tittle_style_left_align = xlwt.easyxf('font: height 240, name Arial, colour_index white, bold on; align: wrap on, vert centre, horiz left;' 'pattern: pattern solid, fore_colour 0x3C')
+
+subTitle_style = xlwt.easyxf('font: height 200, name Arial, colour_index white, bold on, italic on; align: wrap on, vert centre, horiz left;' 'pattern: pattern solid, fore_colour 0x3C')
+
+subTitle_style_center = xlwt.easyxf('font: height 200, name Arial, colour_index white, bold on, italic on; align: wrap on, vert centre, horiz centre;' 'pattern: pattern solid, fore_colour 0x3C')
+
+
+g_style = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz left;' 'pattern: pattern solid, fore_colour 0x1B')
+
+gn_style = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1B')
+
+gtn_style = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1B')
+
+gm_style = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1B')
+
+style1_even = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz left;' 'pattern: pattern solid, fore_colour 0x1A')
+style1_odd = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz left;')
+
+style2_even = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style2_odd = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;')
+
+style3_even = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style3_odd = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;')
+
+style4_even = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style4_odd = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;')
+
+style5_even = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style5_odd = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;')
+
+
+style6_even = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style6_odd = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;')
+
+style7_even = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style7_odd = xlwt.easyxf('font: bold on,height 200;' 'align: wrap on, vert centre, horiz right;')
+
+style8_even = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style8_odd = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;')
+
+style9_even = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz left;' 'pattern: pattern solid, fore_colour 0x1A')
+style9_odd = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz left;')
+
+style10_even = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style10_odd = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;')
+
+style11_even = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style11_odd = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;')
+
+style12_even = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style12_odd = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;')
+
+style13_even = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz left;' 'pattern: pattern solid, fore_colour 0x1A')
+style13_odd = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz left;')
+
+style14_even = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style14_odd = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;')
+
+style15_even = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1A')
+style15_odd = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;')
+
+style16 = xlwt.easyxf('font: bold off,height 200;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1F')
+
+style17 = xlwt.easyxf('font: bold off,height 200,color red;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1F')
+
+style18 = xlwt.easyxf('font: bold off,height 200,color blue;' 'align: wrap on, vert centre, horiz right;' 'pattern: pattern solid, fore_colour 0x1F')
+
+borders = xlwt.Borders()
+borders.left = xlwt.Borders.THIN
+borders.right = xlwt.Borders.THIN
+borders.top = xlwt.Borders.THIN
+borders.bottom = xlwt.Borders.THIN
+
+class ExcelStyles(object):
+     
+    def getBorders(self):
+        bdr = xlwt.Borders()
+        bdr.left = xlwt.Borders.THIN
+        bdr.right = xlwt.Borders.THIN
+        bdr.top = xlwt.Borders.THIN
+        bdr.bottom = xlwt.Borders.THIN
+        return  bdr 
+       
+    def title(self):
+        tittle_style.borders = borders
+        return  tittle_style
+    
+    def titleLeftAligned(self):
+        tittle_style_left_align.borders = borders
+        return  tittle_style_left_align
+    
+    def subTitle(self):
+        subTitle_style.borders = borders
+        return  subTitle_style
+    
+    def subTitlecenter(self):
+        subTitle_style_center.borders = borders
+        return  subTitle_style_center
+    
+    
+    def groupByTitle(self):
+        g_style.borders = borders
+        return  g_style
+    
+    def groupByTotal(self):
+        gn_style.borders = borders
+        gn_style.num_format_str = '########0.00'
+        return  gn_style
+    
+    def groupByTotalNumber(self):
+        gtn_style.borders = borders
+        gtn_style.num_format_str = '##########0'
+        return  gtn_style
+    
+    def groupByTotalMoney(self):
+        gm_style.borders = borders
+        gm_style.num_format_str = '##,##,##,##0.00'
+        return  gm_style
+    
+    
+    def contentText(self, dataRowNo,fontColor='',backColor=''):
+        style1 = None
+        if dataRowNo % 2 == 0:
+            style1 = style1_even
+        else:
+            style1 = style1_odd
+        style1.borders = borders
+        return  style1
+   
+    def contentMoney(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style2 = style2_even
+        else:
+            style2 = style2_odd
+        style2.borders = borders
+        style2.num_format_str = '##,##,##,##0.00'
+        return  style2 
+    
+    def contentMoneyBold(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style5 = style5_even
+        else:
+            style5 = style5_odd
+        style5.borders = borders
+        style5.num_format_str = '##,##,##,##0.00'
+        return  style5 
+    
+    
+     
+    def contentNumber(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style3 = style3_even
+        else:
+            style3 = style3_odd
+        style3.borders = borders
+        style3.num_format_str = '##########0'
+        return  style3  
+    
+    def contentDecNum(self,dataRowNo):
+        if dataRowNo % 2 == 0:
+            style4 = style4_even
+        else:
+            style4 = style4_odd
+        style4.borders = borders
+        style4.num_format_str = '########0.00'
+        return  style4
+    
+    def contentNumberBold(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style6 = style6_even
+        else:
+            style6 = style6_odd
+        style6.borders = borders
+        style6.num_format_str = '##########0'
+        return  style6  
+    
+    def contentDecNumBold(self,dataRowNo):
+        if dataRowNo % 2 == 0:
+            style7 = style7_even
+        else:
+            style7 = style7_odd
+        style7.borders = borders
+        style7.num_format_str = '########0.00'
+        return  style7
+    
+    def contentMoneyRed(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style8 = style8_even
+        else:
+            style8 = style8_odd
+        style8.borders = borders
+        style8.num_format_str = '##,##,##,##0.00'
+        return  style8 
+
+    def contentTextRed(self, dataRowNo,fontColor='',backColor=''):
+        style9 = None
+        if dataRowNo % 2 == 0:
+            style9 = style9_even
+        else:
+            style9 = style9_odd
+        style9.borders = borders
+        return  style9
+
+    def contentNumberRed(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style10 = style10_even
+        else:
+            style10 = style10_odd
+        style10.borders = borders
+        style10.num_format_str = '##########0'
+        return  style10
+
+    def contentDecNumRed(self,dataRowNo):
+        if dataRowNo % 2 == 0:
+            style11 = style11_even
+        else:
+            style11 = style11_odd
+        style11.borders = borders
+        style11.num_format_str = '########0.00'
+        return  style11
+    
+    def contentMoneyBlue(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style12 = style12_even
+        else:
+            style12 = style12_odd
+        style12.borders = borders
+        style12.num_format_str = '##,##,##,##0.00'
+        return  style12 
+
+    def contentTextBlue(self, dataRowNo,fontColor='',backColor=''):
+        style13 = None
+        if dataRowNo % 2 == 0:
+            style13 = style13_even
+        else:
+            style13 = style13_odd
+        style13.borders = borders
+        return  style13
+
+    def contentNumberBlue(self, dataRowNo):
+        if dataRowNo % 2 == 0:
+            style14 = style14_even
+        else:
+            style14 = style14_odd
+        style14.borders = borders
+        style14.num_format_str = '##########0'
+        return  style14
+
+    def contentDecNumBlue(self,dataRowNo):
+        if dataRowNo % 2 == 0:
+            style15 = style15_even
+        else:
+            style15 = style15_odd
+        style15.borders = borders
+        style15.num_format_str = '########0.00'
+        return  style15
+
+    def contentDecNumExceed(self):
+        style16.borders = borders
+        style16.num_format_str = '########0.00'
+        return  style16
+    
+    def contentDecNumExceedRed(self):
+        style17.borders = borders
+        style17.num_format_str = '########0.00'
+        return  style17
+    
+    def contentDecNumExceedBlue(self):
+        style18.borders = borders
+        style18.num_format_str = '########0.00'
+        return  style18
+
+############################################# xls ##############################################3
+
+################################# init.py ###################################################
+
+#~ import timesheet_summary_report_xls
+#~ import timesheet_summary_report_list_xls
+import timesheet_report_xls
+import timesheet_report_list_xls
+
+########################################## timesheet_report_xls.py ########################################
+
+from openerp.osv import orm
+from openerp.addons.report_xls.utils import rowcol_to_cell, _render
+from openerp.tools.translate import _
+
+
+class excel_timesheet(orm.Model):
+    _inherit = 'excel.timesheet'
+    # override list in custom module to add/drop columns or change order
+    def _report_xls_fields(self, cr, uid, context=None):
+        return [
+           # 'move',
+	     'emp_id','first_name','x_role','timesheet_project',
+	     'x_invoice','timesheet_date',
+	     'timesheet_hours',
+	     
+
+        ]
+
+    # Change/Add Template entries
+    def _report_xls_template(self, cr, uid, context=None):
+        """
+        Template updates, e.g.
+
+        my_change = {
+            'move':{
+                'header': [1, 20, 'text', _('My Move Title')],
+                'lines': [1, 0, 'text', _render("line.name or ''")],
+                'totals': [1, 0, 'text', None]},
+        }
+        return my_change
+        """
+        return {}
+
+###################################################### timesheet_report_list_xls ###################################
+
+
+import xlwt
+import time
+from datetime import datetime
+from openerp.osv import orm
+from openerp.report import report_sxw
+from openerp.addons.report_xls.report_xls import report_xls
+from openerp.addons.report_xls.utils import rowcol_to_cell, _render
+from openerp.tools.translate import translate, _
+from openerp import pooler
+import logging
+_logger = logging.getLogger(__name__)
+
+_ir_translation_name = 'timesheet.summary.list.xls'
+
+class temp_timesheet_summary_xls_parser(report_sxw.rml_parse):
+
+    def __init__(self, cr, uid, name, context):
+        super(temp_timesheet_summary_xls_parser, self).__init__(cr, uid, name, context=context)
+        move_obj = self.pool.get('temp.timesheet.summary.line')
+        self.context = context
+        wanted_list = move_obj._report_xls_fields(cr, uid, context)
+        template_changes = move_obj._report_xls_template(cr, uid, context)
+        self.localcontext.update({
+            'datetime': datetime,
+            'wanted_list': wanted_list,
+            'template_changes': template_changes,
+            '_': self._,
+        })
+
+    def _(self, src):
+        lang = self.context.get('lang', 'en_US')
+        return translate(self.cr, _ir_translation_name, 'report', lang, src) or src
+
+
+class move_line_xls(report_xls):
+
+    def __init__(self, name, table, rml=False, parser=False, header=True, store=False):
+        super(move_line_xls, self).__init__(name, table, rml, parser, header, store)
+
+        # Cell Styles
+        _xs = self.xls_styles
+        # header
+        rh_cell_format = _xs['bold'] + _xs['fill'] + _xs['borders_all']
+        self.rh_cell_style = xlwt.easyxf(rh_cell_format)
+        self.rh_cell_style_center = xlwt.easyxf(rh_cell_format + _xs['center'])
+        self.rh_cell_style_right = xlwt.easyxf(rh_cell_format + _xs['right'])
+        # linestemp.timesheet.summary.line,
+        aml_cell_format = _xs['borders_all']
+        self.aml_cell_style = xlwt.easyxf(aml_cell_format)
+        self.aml_cell_style_center = xlwt.easyxf(aml_cell_format + _xs['center'])
+        self.aml_cell_style_date = xlwt.easyxf(aml_cell_format + _xs['left'], num_format_str=report_xls.date_format)
+        self.aml_cell_style_decimal = xlwt.easyxf(aml_cell_format + _xs['right'], num_format_str=report_xls.decimal_format)
+        # totals
+        rt_cell_format = _xs['bold'] + _xs['fill'] + _xs['borders_all']
+        self.rt_cell_style = xlwt.easyxf(rt_cell_format)
+        self.rt_cell_style_right = xlwt.easyxf(rt_cell_format + _xs['right'])
+        self.rt_cell_style_decimal = xlwt.easyxf(rt_cell_format + _xs['right'], num_format_str=report_xls.decimal_format)
+
+        # XLS Template
+        self.col_specs_template = {
+                                  
+            'x_projects': {
+                'header': [1, 42, 'text', _render("_('Project Name')")],
+                'lines': [1, 0, 'text', _render("line.x_projects or ''")],
+                'totals': [1, 0, 'text', None]},
+            
+            'x_emp_id': {
+                'header': [1, 42, 'text', _render("_('EMP ID')")],
+                'lines': [1, 0, 'text', _render("line.x_emp_id or ''")],
+                'totals': [1, 0, 'text', None]},
+                                   
+            'x_resource_name': {
+                'header': [1, 42, 'text', _render("_('Associate Name')")],
+                'lines': [1, 0, 'text', _render("line.x_resource_name or ''")],
+                'totals': [1, 0, 'text', None]},
+            
+            'x_role': {
+                'header': [1, 42, 'text', _render("_('Role')")],
+                'lines': [1, 0, 'text', _render("line.x_role or ''")],
+                'totals': [1, 0, 'text', None]},
+            
+            'x_invoiceable': {
+                'header': [1, 42, 'text', _render("_('P /S /B')")],
+                'lines': [1, 0, 'text', _render("line.x_invoiceable or ''")],
+                'totals': [1, 0, 'text', None]},
+            
+            'x_week_one_hrs': {
+                'header': [1, 42, 'text', _render("_('Week 1')")],
+                'lines': [1, 0, 'text', _render("line.x_week_one_hrs or ''")],
+                'totals': [1, 0, 'text', None]},
+           
+            'x_week_two_hrs': {
+                'header': [1, 42, 'text', _render("_('Week 2')")],
+                'lines': [1, 0, 'text', _render("line.x_week_two_hrs or ''")],
+                'totals': [1, 0, 'text', None]},
+                                                          
+            'x_week_three_hrs': {
+                'header': [1, 42, 'text', _render("_('Week 3')")],
+                'lines': [1, 0, 'text', _render("line.x_week_three_hrs or ''")],
+                'totals': [1, 0, 'text', None]},
+                  
+            'x_week_four_hrs': {
+                'header': [1, 42, 'text', _render("_('Week 4')")],
+                'lines': [1, 0, 'text', _render("line.x_week_four_hrs or ''")],
+                'totals': [1, 0, 'text', None]},
+
+            'x_week_five_hrs': {
+                'header': [1, 42, 'text', _render("_('Week 5')")],
+                'lines': [1, 0, 'text', _render("line.x_week_five_hrs or ''")],
+                'totals': [1, 0, 'text', None]},
+
+            'x_monthly_hrs': {
+                'header': [1, 42, 'text', _render("_('Monthly Hrs')")],
+                'lines': [1, 0, 'text', _render("line.x_monthly_hrs or ''")],
+                'totals': [1, 0, 'text', None]},
+
+        }
+
+    def generate_xls_report(self, _p, _xs, data, objects, wb):
+
+        wanted_list = _p.wanted_list
+        self.col_specs_template.update(_p.template_changes)
+        _ = _p._
+
+        
+
+        #report_name = objects[0]._description or objects[0]._name
+        report_name = _("Timesheet Summary")
+        ws = wb.add_sheet(report_name[:31])
+        ws.panes_frozen = True
+        ws.remove_splits = True
+        ws.portrait = 0  # Landscape
+        ws.fit_width_to_pages = 1
+        row_pos = 0
+
+        # set print header/footer
+        ws.header_str = self.xls_headers['standard']
+        ws.footer_str = self.xls_footers['standard']
+
+        # Title
+        cell_style = xlwt.easyxf(_xs['xls_title'])
+        c_specs = [
+            ('report_name', 1, 0, 'text', report_name),
+        ]
+        row_data = self.xls_row_template(c_specs, ['report_name'])
+        row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=cell_style)
+        row_pos += 1
+
+        # Column headers
+        c_specs = map(lambda x: self.render(x, self.col_specs_template, 'header', render_space={'_': _p._}), wanted_list)
+        row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=self.rh_cell_style, set_column_size=True)
+        ws.set_horz_split_pos(row_pos)
+
+        # account move lines
+        for line in objects:
+            #debit_cell = rowcol_to_cell(row_pos, debit_pos)
+            #credit_cell = rowcol_to_cell(row_pos, credit_pos)
+            #bal_formula = debit_cell + '-' + credit_cell
+            c_specs = map(lambda x: self.render(x, self.col_specs_template, 'lines'), wanted_list)
+            row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+            print row_pos,"===",row_data,"===",ws,"==="
+            row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=self.aml_cell_style)
+            #~ row_pos = self.xls_write_row(ws, 3, [],row_style=self.aml_cell_style)
+
+        #row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
+        #row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=self.rt_cell_style_right)
+
+move_line_xls('report.timesheet.summary1.list.xls',
+    'temp.timesheet.summary.line',
+    parser = temp_timesheet_summary_xls_parser)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+########################################### timesheet_summary_report_list_xls.xml ############################################3
+
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="action_timesheet_summary_report_list_xls" model="ir.actions.report.xml">
+      <field name="name">Download Timesheet</field>
+      <field name="model">timesheet.summary</field>
+      <field name="type">ir.actions.report.xml</field>
+      <field name="report_name">timesheet.summary1.list.xls</field>
+      <field name="report_type">xls</field>
+      <field name="auto" eval="False"/>
+    </record>
+
+    <record model="ir.values" id="action_timesheet_summary_report_list_xls_values">
+      <field name="name">Export Selected Timesheet Summary</field>
+      <field name="key2">client_action_multi</field>
+      <field name="value" eval="'ir.actions.report.xml,' +str(ref('action_timesheet_summary_report_list_xls'))" />
+      <field name="model">timesheet.summary</field>
+    </record>   
+    
+  </data>
+</openerp>
+
+##################################################### timesheet_summary.py #########################################
+
+
+from openerp import pooler, tools
+from openerp.osv import fields, osv
+from datetime import datetime
+import datetime
+from report.excel_styles import ExcelStyles
+import cStringIO
+import base64
+import xlwt
+import sys
+import tools
+import calendar
+import xlrd
+import time
+
+class timesheet_summary(osv.osv):
+    _name = "timesheet.summary"
+    _description = "Timesheet Summary Report"
+    _columns = {
+                'month':fields.selection([('1','January'), ('2','February'), ('3','March'), ('4','April'), ('5','May'),
+         ('6','June'),('7','July'), ('8','August'), ('9','September'), ('10','October'),
+         ('11','November'), ('12','December')],'Month', required=True),
+                'year': fields.integer('Year', size=4, required=True),
+                'week':fields.selection([('1','Week 1'), ('2','Week 2'), ('3','Week 3'),('4','Week 4'), ('5','Week 5')],'Week'),
+                #~ 'x_projects':fields.many2one('project.project','Project :',required=True),
+                'metrics_line_ids':fields.one2many('timesheet.summary.line','metrics_id','Output'),
+                'project_id' : fields.many2many('project.project', 'timesheet_project_summary','search_id','project_id','Project'),
+                'data': fields.binary('File', readonly=True),
+                'name': fields.char('Filename', 50, readonly=True),
+                'advice': fields.text('Advice', readonly=True),
+               }
+    _defaults ={    
+                "name":"Utilization Summary Report",
+                'month': str(datetime.datetime.now().month),
+                'year': datetime.datetime.now().year,
+        'week':'5'
+               }
+               
+    def onchange_x_date_to(self, cr, uid, ids, x_date_to,x_date_from):
+        
+        if x_date_to < x_date_from:
+            raise osv.except_osv('Invalid Date To', 'Date To Should Be Greater Than Date From')
+        
+        return True
+               
+    def download_timesheet_summary(self, cr, uid, ids, context=None):
+        print "wooooooow"
+        self.pool.get('timesheet.summary').generate_data(cr, uid, ids, context)
+        cur_id = self.browse(cr, uid, ids[0], context=context)
+        this = self.browse(cr, uid, ids)[0]
+        mon={ '1':'January','2':'February','3':'March','4':'April','5':'May',
+             '6':'June','7':'July','8':'August','9':'September','10':'October',
+             '11':'November','12':'December'
+             }
+        # Timesheet Summary Query
+        if cur_id.month:
+            
+            data = []
+            cr.execute(''' select acc.name,x_emp_id,x_resource_name,x_role,x_invoiceable,
+                       x_week_one_hrs,x_week_one_fte,x_week_one_leaves,
+                       x_week_two_hrs,x_week_two_fte,x_week_two_leaves,
+                       x_week_three_hrs,x_week_three_fte,x_week_three_leaves,
+                       x_week_four_hrs,x_week_four_fte,x_week_four_leaves,
+                       x_week_five_hrs,x_week_five_fte,x_week_five_leaves,
+                       x_monthly_hrs,x_monthly_fte,x_monthly_leaves,
+                       x_utilization ,x_total_monthly
+
+                       from timesheet_summary_line 
+                       join project_project pro on (pro.id=x_projects)
+                       join account_analytic_account acc on (acc.id=pro.analytic_account_id)
+                       where (x_projects = pro.id) 
+                       order by x_projects,x_resource_name
+                     
+
+                ''')
+
+            Style = ExcelStyles()
+            wbk = xlwt.Workbook()
+            sheet1 = wbk.add_sheet('Utilization Summary Report')
+            #sheet1.header_str = 'November 2 saf safsad'
+
+            sheet1.show_grid = False 
+            sheet1.col(0).width = 5000
+            sheet1.col(1).width = 5000
+            sheet1.col(2).width = 5000
+            sheet1.col(3).width = 5000
+            sheet1.col(4).width = 2500
+            sheet1.col(5).width = 2500
+            sheet1.col(6).width = 2500
+            sheet1.col(7).width = 2500
+            sheet1.col(8).width = 2500
+            sheet1.col(9).width = 2500
+            sheet1.col(10).width = 2500
+            
+            sheet1.col(11).width = 2500
+            sheet1.col(12).width = 2500
+            sheet1.col(13).width = 2500
+            
+            sheet1.col(14).width = 2500
+            sheet1.col(15).width = 2500
+            sheet1.col(16).width = 2500
+            sheet1.col(17).width = 2500
+            sheet1.col(18).width = 2500
+            sheet1.col(19).width = 2500
+            sheet1.col(20).width = 2500
+            
+            sheet1.col(21).width = 2500
+            sheet1.col(22).width = 2500
+            sheet1.col(23).width = 3000
+            sheet1.col(24).width = 2500
+            
+            s1=3
+            s2=4
+            s4=1
+            s3=2
+            s5=5
+            """ WRITING FIELD HEADINGS """
+            
+            # Excel Heading 
+        
+            sheet1.write_merge(s4, s4, 0, 24, "Utilization Summary Report - "+mon[cur_id.month]+" - "+str(cur_id.year), Style.title())
+            sheet1.write_merge(s3, s3, 0, 4, "  ", Style.subTitlecenter())
+            sheet1.write_merge(s3, s3, 5, 7, "Week - 1", Style.subTitlecenter())
+            sheet1.write_merge(s3, s3, 8, 10, "Week - 2", Style.subTitlecenter())
+            sheet1.write_merge(s3, s3, 11, 13, "Week - 3", Style.subTitlecenter())
+            sheet1.write_merge(s3, s3, 14, 16, "Week - 4", Style.subTitlecenter())
+            sheet1.write_merge(s3, s3, 17, 19, "Week - 5", Style.subTitlecenter())
+            sheet1.write_merge(s3, s3, 20, 24, "Monthly", Style.subTitlecenter())
+            result = cr.fetchall()
+            print"result",result
+            uom = "Hours"
+            if result:
+                uom = result[0][4]
+                
+            sheet1.write(s1,0,"Project Name",Style.subTitlecenter())
+            sheet1.write(s1,1,"Emp ID",Style.subTitlecenter())
+            sheet1.write(s1,2,"Associate Name",Style.subTitlecenter())
+            sheet1.write(s1,3,"Role",Style.subTitlecenter())
+            sheet1.write(s1,4,"P/S/B",Style.subTitlecenter())
+            sheet1.write(s1,5,"Billed Hrs",Style.subTitlecenter())
+            sheet1.write(s1,6,"FTE",Style.subTitlecenter())
+            sheet1.write(s1,7,"Leave / Holiday Hrs",Style.subTitlecenter())
+            sheet1.write(s1,8,"Billed Hrs",Style.subTitlecenter())
+            sheet1.write(s1,9,"FTE",Style.subTitlecenter())
+            sheet1.write(s1,10,"Leave / Holiday Hrs",Style.subTitlecenter())
+            sheet1.write(s1,11,"Billed Hrs",Style.subTitlecenter())
+            sheet1.write(s1,12,"FTE",Style.subTitlecenter())
+            sheet1.write(s1,13,"Leave / Holiday Hrs",Style.subTitlecenter())
+            sheet1.write(s1,14,"Billed Hrs",Style.subTitlecenter())
+            sheet1.write(s1,15,"FTE",Style.subTitlecenter())
+            sheet1.write(s1,16,"Leave / Holiday Hrs",Style.subTitlecenter())
+            sheet1.write(s1,17,"Billed Hrs",Style.subTitlecenter())
+            sheet1.write(s1,18,"FTE",Style.subTitlecenter())
+            sheet1.write(s1,19,"Leave / Holiday Hrs",Style.subTitlecenter())
+            sheet1.write(s1,20,"Billed Hrs",Style.subTitlecenter())
+            sheet1.write(s1,21,"FTE",Style.subTitlecenter())
+            sheet1.write(s1,22,"Leave / Holiday Hrs",Style.subTitlecenter())
+            sheet1.write(s1,23,"Utilization",Style.subTitlecenter())
+            sheet1.write(s1,24,"Total Hrs",Style.subTitlecenter())
+            #~ sheet1.write(s1,24,"Total Hrs",Style.subTitlecenter())
+
+            for data in result:
+                
+                sheet1.write(s2,0,data[0], Style.contentText(s2))
+                sheet1.write(s2,1,data[1], Style.contentText(s2))
+                sheet1.write(s2,2,data[2], Style.contentText(s2))
+                sheet1.write(s2,3,data[3], Style.contentText(s2))
+                sheet1.write(s2,4,data[4], Style.contentText(s2))
+                sheet1.write(s2,5,data[5] or 0, Style.contentNumber(s2))
+                sheet1.write(s2,6,data[6] or 0, Style.contentDecNum(s2))
+                sheet1.write(s2,7,data[7], Style.contentNumber(s2))
+                sheet1.write(s2,8,data[8] or 0, Style.contentNumber(s2))
+                sheet1.write(s2,9,data[9] or 0, Style.contentDecNum(s2))
+                sheet1.write(s2,10,data[10], Style.contentNumber(s2))
+                
+                sheet1.write(s2,11,data[11] or 0, Style.contentNumber(s2))
+                sheet1.write(s2,12,data[12] or 0, Style.contentDecNum(s2))
+                sheet1.write(s2,13,data[13], Style.contentNumber(s2))
+                sheet1.write(s2,14,data[14] or 0, Style.contentNumber(s2))
+                sheet1.write(s2,15,data[15] or 0, Style.contentDecNum(s2))
+                sheet1.write(s2,16,data[16], Style.contentNumber(s2))
+                sheet1.write(s2,17,data[17] or 0, Style.contentNumber(s2))
+                sheet1.write(s2,18,data[18] or 0, Style.contentDecNum(s2))
+                sheet1.write(s2,19,data[19], Style.contentNumber(s2))
+                sheet1.write(s2,20,xlwt.Formula("Sum(F%d+I%d+L%d+O%d+R%d)" % (s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1)), Style.contentNumber(s2))
+                
+                sheet1.write(s2,21,xlwt.Formula('Sum(G%d+J%d+M%d+P%d+S%d) / Sum(COUNTIF(G%d;">0"),COUNTIF(J%d;">0"),COUNTIF(M%d;">0"),COUNTIF(P%d;">0"),COUNTIF(S%d;">0"))' % (s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1)), Style.contentDecNum(s2))
+                sheet1.write(s2,22,xlwt.Formula("Sum(H%d+K%d+N%d+Q%d+T%d)" % (s2 + 1, s2 + 1, s2 + 1, s2 + 1, s2 + 1)), Style.contentNumber(s2))
+                sheet1.write(s2,23,xlwt.Formula("((U%d/(Y%d*V%d))*100)" % (s2 + 1, s2 + 1, s2 + 1)), Style.contentNumber(s2))
+                sheet1.write(s2,24,data[24] or 0, Style.contentNumber(s2))
+                #~ sheet1.write(s5, 10, xlwt.Formula("(I%d-J%d)" % (s5 + 1, s5 + 1)), Style.contentNumber(s5))
+                s2+=1
+            if result:
+                
+                sheet1.write_merge(s2, s2, 0, 4,"Total :", Style.contentMoneyBold(s4))
+                sheet1.write(s2, 5, xlwt.Formula("SUM(F%d:F%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 6, xlwt.Formula("SUM(G%d:G%d)" % (s5, s2)), Style.contentMoneyBold(s2))      
+                sheet1.write(s2, 7, xlwt.Formula("SUM(H%d:H%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 8, xlwt.Formula("SUM(I%d:I%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                
+                sheet1.write(s2, 9, xlwt.Formula("SUM(J%d:J%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 10, xlwt.Formula("SUM(K%d:K%d)" % (s5, s2)), Style.contentMoneyBold(s2))      
+                sheet1.write(s2, 11, xlwt.Formula("SUM(L%d:L%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 12, xlwt.Formula("SUM(M%d:M%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                
+                sheet1.write(s2, 13, xlwt.Formula("SUM(N%d:N%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 14, xlwt.Formula("SUM(O%d:O%d)" % (s5, s2)), Style.contentMoneyBold(s2))      
+                sheet1.write(s2, 15, xlwt.Formula("SUM(P%d:P%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 16, xlwt.Formula("SUM(Q%d:Q%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                
+                sheet1.write(s2, 17, xlwt.Formula("SUM(R%d:R%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 18, xlwt.Formula("SUM(S%d:S%d)" % (s5, s2)), Style.contentMoneyBold(s2))      
+                sheet1.write(s2, 19, xlwt.Formula("SUM(T%d:T%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 20, xlwt.Formula("SUM(U%d:U%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                
+                sheet1.write(s2, 21, xlwt.Formula("SUM(V%d:V%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 22, xlwt.Formula("SUM(W%d:W%d)" % (s5, s2)), Style.contentMoneyBold(s2))      
+                sheet1.write(s2, 23, xlwt.Formula("((U%d/(V%d*160))*100)" % (s2 + 1, s2 + 1)), Style.contentMoneyBold(s2))
+                sheet1.write(s2, 24, xlwt.Formula("SUM(Y%d:Y%d)" % (s5, s2)), Style.contentMoneyBold(s2))
+
+            file_data=cStringIO.StringIO()
+            o=wbk.save(file_data)
+            advice = ('Save This Document To a .xls File.')
+            out=base64.encodestring(file_data.getvalue())
+            self.write(cr, uid, ids, {'data':out,
+                                    'advice':advice,
+                                    'name':this.name},
+                                    context=context)
+            return { 'type': 'ir.actions.act_url', 'url': '/custom_timesheet_report/export_summary_xls?id='+ str(ids[0]) + '&db='+ str(cr.dbname) + '&uid=' + str(uid), 'nodestroy': True, 'target': 'new'}    
+
+
+
+
+
+
+    def generate_data(self, cr, uid, ids, context):
+        mmm={ '1':'January','2':'February','3':'March','4':'April','5':'May',
+             '6':'June','7':'July','8':'August','9':'September','10':'October',
+             '11':'November','12':'December'
+             }
+        print "generate data............"
+        #### delete previous generated data in timesheet.summary.line####
+        pip_line = self.pool.get('timesheet.summary.line')
+        data_ids = pip_line.search(cr, uid, [('id','>',0)])
+        if len(data_ids)>0:
+            pip_line.unlink(cr, uid, data_ids, context)
+        ############ End ###########
+
+        #### delete previous generated data in timesheet.summary ####
+        cur_id = self.browse(cr, uid, ids[0], context=context)
+        pip = self.search(cr, uid, [('id','<',ids[0])])
+        if len(pip)>0:
+            self.unlink(cr, uid, pip, context)
+        ##############  End ################
+        print "Working fine",cur_id.week,"111111111111"
+        print 'context is @@@',context.get('type')
+        # Timesheet Summary Query
+        dynamic_query = ""
+        if cur_id.week == False:
+            raise osv.except_osv(('Warning !!!'), ('No Week Selected.'))
+            
+        query = '''with temp as(
+select     res.name as first_name,
+    emp.x_emp_id as emp_id,
+    pr.name as x_role,
+    fte.user_id as user_id,
+    fte.resource_type as invoice,
+    proj_fte.project_id as project_id,
+    proj_fte.month as month,
+    proj_fte.year as year,
+    sum(case when proj_fte.week='Week 1' then fte.billed_hours end) as week1,
+    max(case when proj_fte.week='Week 1' then fte.fte end) as fte1,
+    sum(case when proj_fte.week='Week 1' then fte.leave_hours end) as leaves1,
+    sum(case when proj_fte.week='Week 1' then proj_fte.total_hours end) as std1,
+    
+    sum(case when proj_fte.week='Week 2' then fte.billed_hours end) as week2, 
+    max(case when proj_fte.week='Week 2' then fte.fte end) as fte2,
+    sum(case when proj_fte.week='Week 2' then fte.leave_hours end) as leaves2,
+    sum(case when proj_fte.week='Week 2' then proj_fte.total_hours end) as std2,
+    
+    sum(case when proj_fte.week='Week 3' then fte.billed_hours end) as week3, 
+    max(case when proj_fte.week='Week 3' then fte.fte end) as fte3,
+    sum(case when proj_fte.week='Week 3' then fte.leave_hours end) as leaves3,
+    sum(case when proj_fte.week='Week 3' then proj_fte.total_hours end) as std3,
+    
+    sum(case when proj_fte.week='Week 4' then fte.billed_hours end) as week4, 
+    max(case when proj_fte.week='Week 4' then fte.fte end) as fte4,
+    sum(case when proj_fte.week='Week 4' then fte.leave_hours end) as leaves4,
+    sum(case when proj_fte.week='Week 4' then proj_fte.total_hours end) as std4,
+    
+    sum(case when proj_fte.week='Week 5' then fte.billed_hours end) as week5,  
+    max(case when proj_fte.week='Week 5' then fte.fte end) as fte5,
+    sum(case when proj_fte.week='Week 5' then fte.leave_hours end) as leaves5,
+    sum(case when proj_fte.week='Week 5' then proj_fte.total_hours end) as std5
+
+    from project_user_fte fte
+    join project_fte proj_fte on (project_fte_id = proj_fte.id)
+    join resource_resource res on (res.user_id = fte.user_id)
+    join hr_employee emp on (emp.resource_id = res.id)
+    join project_team_members ptm on (ptm.uid = res.user_id)
+    join project_role pr on (pr.id = ptm.job_id)'''    
+    
+
+        if context is None:
+            print "data"
+            context = {}
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        print "*****",data.get('year'),"--------",data.get('month'),"**********",type(cur_id.year)
+        
+        if data.get('year'):
+            print "year"
+            year = data['year']
+        
+        if data.get('month'):
+            print"month"
+            month = data['month']
+        
+        if data.get('project_id'):
+            print"project"
+            project_id = data['project_id']
+
+    #~ if not cur_id.project_id :
+        #~ print "@@@@@@@@@@@@",data.get('project_id')
+        #~ raise osv.except_osv(('Warning !!!'), ('No Project Selected.'))
+        
+        print "*****",cur_id.year,"--------",mmm[cur_id.month],"**********",type(cur_id.year)
+        
+        #~ if len(month) == 1 :
+            #~ print "222222222222"
+            #~ month = str(month[0])
+        query += "where month = '"+month+"'"
+        #~ query += "and year = '"+year+"'"
+        if data.get('project_id') == []:
+            query +=""
+        elif project_id:
+            print"Super"
+            if len(project_id) == 1 :
+                project_id = str(project_id[0])
+                query += "and proj_fte.project_id = " +project_id
+            else :
+                project_id=str(tuple(project_id))
+                query += "and proj_fte.project_id in " +project_id
+        
+        query += "and year = "+str(cur_id.year)
+        query = query + '''
+        group by
+        res.name,
+        emp.x_emp_id,
+        proj_fte.month,
+        proj_fte.year,
+        proj_fte.project_id,
+        emp.x_designation,
+        fte.user_id,
+        pr.name,
+        fte.resource_type
+        order by project_id,first_name)
+        
+        '''
+        
+        if cur_id.week:
+            print "data",cur_id.week,cur_id.week == '1'
+            if cur_id.week == '1' :
+                query = query+'''
+            select *, (COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)+COALESCE(week5,0)) as Monthly,
+            GREATEST(COALESCE(to_number(fte1,'9999999'),0),COALESCE(to_number(fte2,'9999999'),0),COALESCE(to_number(fte3,'9999999'),0),COALESCE(to_number(fte4,'9999999'),0),COALESCE(to_number(fte5,'9999999'),0)) as fte,
+            (COALESCE(leaves1,0)+COALESCE(leaves2,0)+COALESCE(leaves3,0)+COALESCE(leaves4,0)+COALESCE(leaves5,0))as leave,
+            ((COALESCE(week1,0)) /
+            (COALESCE(std1,0))*100) as Utility,
+            (COALESCE(std1,0)) as tot_hrs
+            from temp;
+            '''
+            elif cur_id.week == '2' :
+                query = query+'''
+            select *, (COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)+COALESCE(week5,0)) as Monthly,
+            GREATEST(COALESCE(to_number(fte1,'9999999'),0),COALESCE(to_number(fte2,'9999999'),0),COALESCE(to_number(fte3,'9999999'),0),COALESCE(to_number(fte4,'9999999'),0),COALESCE(to_number(fte5,'9999999'),0)) as fte,
+            (COALESCE(leaves1,0)+COALESCE(leaves2,0)+COALESCE(leaves3,0)+COALESCE(leaves4,0)+COALESCE(leaves5,0))as leave,
+            ((COALESCE(week1,0)+COALESCE(week2,0)) /
+            (COALESCE(std1,0)+COALESCE(std2,0))*100) as Utility,
+            (COALESCE(std1,0)+COALESCE(std2,0)) as tot_hrs
+            from temp;
+            '''
+            elif cur_id.week == '3' :
+                query = query+'''
+            select *, (COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)+COALESCE(week5,0)) as Monthly,
+            GREATEST(COALESCE(to_number(fte1,'9999999'),0),COALESCE(to_number(fte2,'9999999'),0),COALESCE(to_number(fte3,'9999999'),0),COALESCE(to_number(fte4,'9999999'),0),COALESCE(to_number(fte5,'9999999'),0)) as fte,
+            (COALESCE(leaves1,0)+COALESCE(leaves2,0)+COALESCE(leaves3,0)+COALESCE(leaves4,0)+COALESCE(leaves5,0))as leave,
+            ((COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)) /
+            (COALESCE(std1,0)+COALESCE(std2,0)+COALESCE(std3,0))*100) as Utility,
+            (COALESCE(std1,0)+COALESCE(std2,0)+COALESCE(std3,0)) as tot_hrs
+            from temp;
+            '''
+    
+            elif cur_id.week == '4' :
+                query = query+'''
+            select *, (COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)+COALESCE(week5,0)) as Monthly,
+            GREATEST(COALESCE(to_number(fte1,'9999999'),0),COALESCE(to_number(fte2,'9999999'),0),COALESCE(to_number(fte3,'9999999'),0),COALESCE(to_number(fte4,'9999999'),0),COALESCE(to_number(fte5,'9999999'),0)) as fte,
+            (COALESCE(leaves1,0)+COALESCE(leaves2,0)+COALESCE(leaves3,0)+COALESCE(leaves4,0)+COALESCE(leaves5,0))as leave,
+            ((COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)) /
+            (COALESCE(std1,0)+COALESCE(std2,0)+COALESCE(std3,0)+COALESCE(std4,0))*100) as Utility,
+            (COALESCE(std1,0)+COALESCE(std2,0)+COALESCE(std3,0)+COALESCE(std4,0)) as tot_hrs
+            from temp;
+            '''
+            
+            else :
+                query = query+'''
+            select *, (COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)+COALESCE(week5,0)) as Monthly,
+            GREATEST(COALESCE(to_number(fte1,'9999999'),0),COALESCE(to_number(fte2,'9999999'),0),COALESCE(to_number(fte3,'9999999'),0),COALESCE(to_number(fte4,'9999999'),0),COALESCE(to_number(fte5,'9999999'),0)) as fte,
+            (COALESCE(leaves1,0)+COALESCE(leaves2,0)+COALESCE(leaves3,0)+COALESCE(leaves4,0)+COALESCE(leaves5,0))as leave,
+            ((COALESCE(week1,0)+COALESCE(week2,0)+COALESCE(week3,0)+COALESCE(week4,0)+COALESCE(week5,0)) /
+            (COALESCE(std1,0)+COALESCE(std2,0)+COALESCE(std3,0)+COALESCE(std4,0)+COALESCE(std5,0))*100) as Utility,
+            (COALESCE(std1,0)+COALESCE(std2,0)+COALESCE(std3,0)+COALESCE(std4,0)+COALESCE(std5,0)) as tot_hrs
+            from temp;
+            '''
+    
+            print "query",query
+            cr.execute(query)
+        
+            data = cr.dictfetchall()
+    
+            if data:
+                    for i in data:       
+                        if cur_id.week == '1' :
+                            v_week1 = i['week1']
+                            v_fte1 =  i['fte1']
+                            v_leaves1 = i['leaves1']
+                            v_week2 = 0
+                            v_fte2 = 0
+                            v_leaves2 = 0
+                            v_week3 = 0
+                            v_fte3 = 0
+                            v_leaves3 = 0
+                            v_week4 = 0
+                            v_fte4 = 0
+                            v_leaves4 = 0
+                            v_week5 = 0
+                            v_fte5 = 0
+                            v_leaves5 = 0
+                        elif cur_id.week == '2' :
+                            v_week1 = i['week1']
+                            v_fte1 =  i['fte1']
+                            v_leaves1 = i['leaves1']
+                            v_week2 = i['week2']
+                            v_fte2 = i['fte2']
+                            v_leaves2 = i['leaves2'] 
+                            v_week3 = 0
+                            v_fte3 = 0
+                            v_leaves3 = 0
+                            v_week4 = 0
+                            v_fte4 = 0
+                            v_leaves4 = 0
+                            v_week5 = 0
+                            v_fte5 = 0
+                            v_leaves5 = 0
+                        elif cur_id.week == '3' :
+                            v_week1 = i['week1']
+                            v_fte1 =  i['fte1']
+                            v_leaves1 = i['leaves1']
+                            v_week2 = i['week2']
+                            v_fte2 = i['fte2']
+                            v_leaves2 = i['leaves2'] 
+                            v_week3 = i['week3']
+                            v_fte3 = i['fte3']
+                            v_leaves3 = i['leaves3']
+                            v_week4 = 0
+                            v_fte4 = 0
+                            v_leaves4 = 0
+                            v_week5 = 0
+                            v_fte5 = 0
+                            v_leaves5 = 0
+                        
+                        elif cur_id.week == '4' :
+                            v_week1 = i['week1']
+                            v_fte1 =  i['fte1']
+                            v_leaves1 = i['leaves1']
+                            v_week2 = i['week2']
+                            v_fte2 = i['fte2']
+                            v_leaves2 = i['leaves2'] 
+                            v_week3 = i['week3']
+                            v_fte3 = i['fte3']
+                            v_leaves3 = i['leaves3']
+                            v_week4 = i['week4']
+                            v_fte4 = i['fte4']
+                            v_leaves4 = i['leaves4']
+                            v_week5 = 0
+                            v_fte5 = 0
+                            v_leaves5 = 0
+                            
+                        else :
+                            v_week1 = i['week1']
+                            v_fte1 =  i['fte1']
+                            v_leaves1 = i['leaves1']
+                            v_week2 = i['week2']
+                            v_fte2 = i['fte2']
+                            v_leaves2 = i['leaves2'] 
+                            v_week3 = i['week3']
+                            v_fte3 = i['fte3']
+                            v_leaves3 = i['leaves3']
+                            v_week4 = i['week4']
+                            v_fte4 = i['fte4']
+                            v_leaves4 = i['leaves4']
+                            v_week5 = i['week5']
+                            v_fte5 = i['fte5']
+                            v_leaves5 = i['leaves5']
+                        pip_line.create(cr, uid, {
+                                                               
+                                        'x_projects':i['project_id'] or 0,
+                                        'metrics_id':ids[0] or 0,
+                                        'x_emp_id':i['emp_id'] or 0,
+                                        'x_resource_name':i['first_name'] or 0,
+                                        'x_role':i['x_role'] or 0,
+                                        'x_invoiceable':i['invoice'] or 0,
+                                        'x_week_one_hrs': v_week1 or 0,
+                                        'x_week_one_fte': v_fte1 or 0,
+                                        'x_week_one_leaves':v_leaves1 or 0,
+                                        'x_week_two_hrs':v_week2 or 0,
+                                        'x_week_two_fte':v_fte2 or 0,
+                                        'x_week_two_leaves':v_leaves2 or 0,
+                                        'x_week_three_hrs':v_week3 or 0,
+                                        'x_week_three_fte':v_fte3 or 0,
+                                        'x_week_three_leaves':v_leaves3 or 0,
+                                        'x_week_four_hrs':v_week4 or 0,
+                                        'x_week_four_fte':v_fte4 or 0,
+                                        'x_week_four_leaves':v_leaves4 or 0,
+                                        'x_week_five_hrs':v_week5 or 0,
+                                        'x_week_five_fte':v_fte5 or 0,
+                                        'x_week_five_leaves':v_leaves5 or 0,
+                                        'x_monthly_hrs': i['monthly'] or 0,
+                                        'x_monthly_fte':i['fte'] or 0,
+                                        'x_monthly_leaves':i['leave'] or 0,
+                                        'x_utilization':i['utility'] or 0,                                
+                                        'x_total_monthly':i['tot_hrs'] or 0,
+                                                               })
+        #self.pool.get('timesheet.summary').download_timesheet_summary(cr, uid, ids, context=None)                
+        return True
+            
+     
+        #~ else:
+           #~ raise osv.except_osv(('Warning !!!'), ('No Data Found.'))
+#~ 
+        #~ return True
+        
+    def clear_data(self,cr, uid, ids, context):
+        self.write(cr, uid, ids[0], {'project_id':'',})
+        pip_line = self.pool.get('timesheet.summary.line')
+        data_ids = pip_line.search(cr, uid, [('id','>',0)])
+        if data_ids:
+            pip_line.unlink(cr, uid, data_ids, context)
+        return True    
+
+timesheet_summary()
+
+class timesheet_summary_line(osv.osv):
+    _name = "timesheet.summary.line"
+    _description = "Timesheet Summary Line"
+    _columns = {
+
+            'x_projects':fields.many2one('project.project','ProjectName'),
+            'metrics_id':fields.many2one('timesheet.summary',"line"),
+            'x_emp_id':fields.char('Emp ID'),
+            'x_resource_name':fields.char('Employee Name'),
+            'x_role':fields.char('Role'),
+            'x_invoiceable':fields.char('P/S/B'),
+            'x_week_one_hrs':fields.integer('1st Week'),
+        'x_week_one_fte':fields.float('FTE'),
+        'x_week_one_leaves':fields.integer('Leaves'),
+            'x_week_two_hrs':fields.integer("2nd Week"),
+        'x_week_two_fte':fields.float('FTE'),
+        'x_week_two_leaves':fields.integer('Leaves'),
+            'x_week_three_hrs':fields.integer('3rd Week'),
+        'x_week_three_fte':fields.float('FTE'),
+        'x_week_three_leaves':fields.integer('Leaves'),
+            'x_week_four_hrs':fields.integer('4th Week'),
+        'x_week_four_fte':fields.float('FTE'),
+        'x_week_four_leaves':fields.integer('Leaves'),
+            'x_week_five_hrs':fields.integer('5th Week'),
+        'x_week_five_fte':fields.float('FTE'),
+        'x_week_five_leaves':fields.integer('Leaves'),
+            'x_monthly_hrs':fields.integer('Monthly'),
+            'x_monthly_fte':fields.float('FTE'),
+        'x_monthly_leaves':fields.integer('Leaves'),
+        'x_utilization':fields.float('Utilization'),
+        'x_total_monthly':fields.float('Total Hrs'),
+               }
+timesheet_summary_line()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+########################################################### timesheet_summary_view.xml ######################################
+
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<!-- sub menus --> 
+    <menuitem id="menu_report_pmo_screen_submenu" 
+		parent="customize_hr_timesheet.menu_report_top_menu_screen" 
+		name="PMO" 
+		sequence="4"
+		groups="base.group_timesheet_employeee_all_activities,base.group_timesheet_summary,base.group_timesheet_attendence"
+   		/>
+   
+   <menuitem id="menu_report_Timeoffice_screen_submenu" 
+		parent="customize_hr_timesheet.menu_report_top_menu_screen" 
+		name="TimeOffice" 
+		sequence="6"
+		groups="base.group_timesheet_employeee_all_activities,base.group_timesheet_summary,base.group_timesheet_attendence,base.group_human_performance"
+   		/>
+  <!-- sub menus -->  	
+<!--
+    <record id="view_timesheet_summary_form" model="ir.ui.view">
+        <field name="name">timesheet.summary.form</field>
+        <field name="model">timesheet.summary</field>
+        <field name="arch" type="xml">
+        <form string="Timesheet Summary" version="7.0" create="false">
+
+	      <div class="oe_right oe_button_box">
+			<button name="download_timesheet_summary" string="Download XLS" type="object"/>
+	      </div>
+              <group>
+                    <field name="year" style="width:50%%" />
+                    <field name="month" style="width:10%%" />
+                    <field name="week" style="width:10%%"/>
+                    <field name="project_id"  options="{'create': false, 'create_edit': false,'no_open': True}" style="width:50%%" widget='many2many_tags' context="{'type' :'summary_report'}"/>
+                    
+              </group>
+              <group col="4" colspan="2">
+                    <div align="left">
+
+                        <button name="generate_data" string="Search" type="object"/>
+                        <button name="clear_data" string="Reset" type="object"/>
+			<button name="download_timesheet_summary" string="Download XLS" type="object"/>
+                    </div>
+              </group>
+	        <div class="scroll_style_summary" >
+                <field name="metrics_line_ids">
+                     <tree string="Candidates" create="false" delete="false" editable="top">
+
+                            <field name="x_projects" readonly="1"/>
+                            <field name="x_emp_id" readonly="1"/>
+                            <field name="x_resource_name" readonly="1"/>
+                            <field name="x_role" readonly="1"/>
+                            <field name="x_invoiceable" readonly="1"/>
+			    
+                            <field name="x_week_one_hrs" readonly="1"/>
+			    <field name="x_week_one_fte" readonly="1"/>
+			    <field name="x_week_one_leaves" readonly="1"/>
+			    
+			    <field name="x_week_two_hrs" readonly="1"/>
+			    <field name="x_week_two_fte" readonly="1"/>
+			    <field name="x_week_two_leaves" readonly="1"/>
+			    
+                            <field name="x_week_three_hrs" readonly="1"/>
+			    <field name="x_week_three_fte" readonly="1"/>
+			    <field name="x_week_three_leaves" readonly="1"/>
+			    
+                            <field name="x_week_four_hrs" readonly="1"/>
+			    <field name="x_week_four_fte" readonly="1"/>
+			    <field name="x_week_four_leaves" readonly="1"/>
+			    
+                            <field name="x_week_five_hrs" readonly="1"/>
+			    <field name="x_week_five_fte" readonly="1"/>
+			    <field name="x_week_five_leaves" readonly="1"/>
+			    
+                            <field name="x_monthly_hrs" readonly="1"/>
+			    <field name="x_monthly_fte" readonly="1"/>
+			    <field name="x_monthly_leaves" readonly="1"/>
+			    
+			    <field name="x_utilization" readonly="1"/>
+			    <field name="x_total_monthly" readonly="1"/>
+
+                     </tree>
+                </field>
+                </div>
+        </form>
+        </field>
+    </record>
+-->
+    <!-- Inherited project tree -->
+      <record id="view_summary_report_inherited" model="ir.ui.view">
+            <field name="name">project.project.inherit.summary</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="priority" eval="5" />
+            <field name="arch" type="xml">
+               
+                <field name="planned_hours" position="replace">
+		    		<field name="planned_hours" invisible="[context.get('type', False) , '=' , 'summary_report']"/>
+                </field>
+                <field name="total_hours" position="replace">
+			    	<field name="total_hours" invisible="[context.get('type', False) , '=' , 'summary_report']"/>
+                </field>
+		       
+                 <field name="effective_hours" position="replace">
+			    	<field name="effective_hours" invisible="[context.get('type', False) , '=' , 'summary_report']"/>
+                </field>
+                 <field name="progress_rate" position="replace">
+			    	<field name="progress_rate" invisible="[context.get('type', False) , '=' , 'summary_report']"/>
+                </field>
+                 <field name="state" position="replace">
+			    	<field name="state" invisible="[context.get('type', False) , '=' , 'summary_report']"/>
+                </field>  
+               
+            </field>
+        </record>
+
+    <!-- Inherited project filter list from base class hr folder -->
+             <record id="view_summary_view_hr_project_filter" model="ir.ui.view">
+            <field name="name">hr.employee.inherit.filter.summary</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project_timesheet.project_invoice_search"/>
+            <field name="priority" eval="5" />
+            <field name="arch" type="xml">
+                
+                 <xpath expr="//filter[@string='Open']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+               <xpath expr="//filter[@string='Pending']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+                <xpath expr="//filter[@string='Template']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+                <xpath expr="//filter[@string='Member']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+                <xpath expr="//filter[@string='Project(s) Manager']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+                <xpath expr="//filter[@string='Unread Messages']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+                 <xpath expr="//filter[@string='Billable']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+                <xpath expr="//filter[@string='Parent']" position="attributes">
+                    <attribute name='invisible'>"[context.get('type', False) , '=' , 'summary_report']"</attribute>
+                </xpath>
+               
+            </field>
+        </record>
+
+
+      
+<!-- Summary Report -->
+    <record model="ir.ui.view" id="summary_report_form_view">
+			<field name="name">Timesheet Summary Report</field>
+			<field name="model">timesheet.summary</field>
+			<field name="arch" type="xml">
+				<form string="Utilization Summary Report" version="7.0">
+					<header>
+						<button icon="gtk-print" name="download_timesheet_summary" string="Download XLS" type="object" />
+					</header>
+					
+					<group>
+						<group>
+						    <field name="year" style="width:50%%" />
+						    <field name="month" style="width:20%%" />
+						    <field name="week" style="width:10%%"/>
+						    <field name="project_id"  options="{'create': false, 'create_edit': false,'no_open': True}" style="width:50%%" widget='many2many_tags' context="{'type' :'summary_report'}"/>
+                    
+                                                </group>
+					</group>
+					<group><br></br><br></br><br></br><br></br></group>
+					<group><br></br><br></br><br></br><br></br></group>
+				</form>
+			</field>
+		</record>
+		
+		<record id="open_view_summary_report" model="ir.actions.act_window">
+			<field name="name">Utilization Summary Report</field>
+			<field name="res_model">timesheet.summary</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+		<menuitem action="open_view_summary_report" id="summary_report"  parent="menu_report_pmo_screen_submenu" sequence="1" />
+
+<!-- Summary Report -->
+		
+		
+<!--  ******************************** TimeSheet Cron **************************************  -->
+
+    <record id="ir_cron_prod_metrics" model="ir.cron">
+        <field name="name">Run Timesheet Actions Summary</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model">excel.timesheet</field>
+        <field name="function">cron_timesheet_excel</field>
+        <field eval="'(False,)'" name="args" />
+    </record>
+
+<!--  ******************************** TimeSheet Cron **************************************  -->
+
+    <record id="ir_cron_prod_metrics_ars" model="ir.cron">
+        <field name="name">Run Timesheet ARS</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model">timesheet.ars</field>
+        <field name="function">get_timesheet_ars</field>
+        <field eval="'(False,)'" name="args" />
+    </record>
+
+<!--  ******************************** Timesheet Weekly Report Menu **************************************  -->
+
+<!--
+  <record id="action_menu_timesheet_summary_reports_id" model="ir.actions.act_window">
+        <field name="name">Utilization Summary Report</field>
+        <field name="res_model">timesheet.summary</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_timesheet_summary_form"/>
+	<field name="context">{'type' :'summary_report'}</field>
+  </record>
+-->
+
+ <!--  <menuitem id="menu_timesheet_reports_id" 
+		parent="customize_hr_timesheet.menu_timesheet_top_menu_screen_submenu" 
+		name="Timesheet Reports" 
+		sequence="4"
+		groups="base.group_timesheet_employeee_all_activities,base.group_timesheet_summary,base.group_timesheet_attendence"
+   		/> -->
+
+<!--
+  <menuitem id="menu_timesheet_summary_reports_id"
+              parent="menu_timesheet_reports_id" 
+              sequence="5"
+              action="action_menu_timesheet_summary_reports_id"
+              groups="base.group_timesheet_summary"
+              />
+-->
+      
+</data>
+</openerp>
+
+################################################################## init.py  #######################################################
+
+
+import excel_timesheet
+import controllers
+import timesheet_ars
+import timesheet_summary
+import timesheet_attendence_report
+import timesheet_ars
+import report
+import project_active
+import ars_timesheet_attendence_report
+import hr_timesheet_leave_report
+import timecard_utilization
+
+############################################################ openerp.py ##########################################################3
+
+
+{
+    'name': 'custom_timesheet_report',
+    'version': '1.0',
+    'category': 'HR Timesheet',
+    'sequence': 14,
+    'summary': 'productivity_metrics',
+    'description': """ Using filters for productivity_metrics  """,
+    'author': 'Keerthi Deepakl',
+    #'website': 'http://www.openerp.com',
+    'depends': ['hr','base','hr_timesheet','customize_hr_timesheet','hr_timesheet_sheet','hr_timesheet_invoice','project'],
+    'data': [ #'security/timesheet_reports.xml',
+              'security/ir.model.access.csv',
+	     'timesheet_summary_view.xml',
+	     'excel_timesheet_view.xml',
+	     'project_active.xml',
+         #~ 'timesheet_attendence_report_view.xml',
+         'timecard_utilization_view.xml',
+         'report/xls/timesheet_report_list_xls.xml',
+         
+	    ],
+    'demo': [],
+    'installable': True,
+    'css': ['static/css/timesheet.css',
+            ],
+    'auto_install': False,
+    'application': True,
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+####################################
